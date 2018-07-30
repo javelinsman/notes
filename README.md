@@ -1,3 +1,3 @@
 # notes
 
-Notes and presentation slides on all the topic I am interested in
+Notes and presentation slides on all the topics I am interested in
