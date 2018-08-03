@@ -38,7 +38,7 @@
 * 제일 가까운 이웃 하나만 고려하면 generalizable한 decision boundary가 형성되지 않음
   * outlier가 자신만의 local area를 구축하기 때문
 * 그래서 K개의 가까운 이웃을 보고, 그 중에 가장 많이 속한 category로 예측함 (KNN)  
- ![](assets/2_1.PNG)
+ ![](./assets/2_1.PNG)
  
 * Image classification에선 사실 안 씀
   * 이유 1: 지각적으로 다르게 느껴지는 것과, L1이나 L2 거리가 상관이 없음
