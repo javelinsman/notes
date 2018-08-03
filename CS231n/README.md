@@ -115,3 +115,50 @@
 * Bag of Words: 이미지에서 patch를 적당하게 랜덤 추출해서 codebook처럼 사용하는 것. 이 경우 feature는 차원이 word의 갯수인 히스토그램.
 * 과거에는 feature extraction이 유행했는데, 요즘은 CNN이 feature extraction 작업을 암묵적으로 해주고 있다.  
   ![3_4.png](assets/3_4.png)
+
+# Lecture 4: Backpropagation and Neural Networks
+
+## Back Propagation
+ 
+* Analytic gradient를 구할 때 네트워크의 노드가 많고 복잡해져도, 제일 말단에서부터 gradient가 "퍼져 나오는" 느낌으로 계산할 수 있다.
+* 어떤 노드에 x라는 incoming edge와 z라는 outgoing edge가 있을 때
+  * ![\frac{\partial L}{\partial x} = \frac{\partial z}{\partial x} \frac{\partial L}{\partial z}](https://latex.codecogs.com/png.latex?%5Cfrac%7B%5Cpartial%20L%7D%7B%5Cpartial%20x%7D%20%3D%20%5Cfrac%7B%5Cpartial%20z%7D%7B%5Cpartial%20x%7D%20%5Cfrac%7B%5Cpartial%20L%7D%7B%5Cpartial%20z%7D)
+  * 이므로 z에서 오는 incoming gradient, z를 x로 미분한 함수, 그리고 x의 현재값을 알면 x의 gradient를 구할 수 있다.
+    ![4_1.png](assets/4_1.png)
+* vectorized된 경우, 즉 어떤 노드에 여러 개의 incoming edge와 여러 개의 outgoing edge가 있을 때는
+  * 하나의 incoming edge마다 모든 outgoing edge들에 대한 미분값이 각각의 incoming gradient와 내적되며
+  * 그걸 모든 incoming edge마다 해야 하므로
+  * 이론적으로 Jacobian matrix를 곱하면 해결된다
+* 실제로 각종 딥러닝 라이브러리에는 각 노드마다 `forward` 함수와 `backward` 함수가 구현되어 있어 이들이 호출되는 형태  
+  ![4_2.png](assets/4_2.png)
+
+## Vectorized Gradient 계산법
+
+* 근데 Jacobian matrix가 엄청 크고 되게 sparse하기 때문에 진짜로 그렇게 계산하진 않는다.
+* 하나의 변수에 대해 대수적으로 미분 결과를 구하고 그것을 행렬로 확장하는 테크닉이 필요한데, ![delta_{ij}](https://latex.codecogs.com/png.latex?\delta_%7Bij%7D)같은 걸 잘 활용하면 좋다.
+  * Jacobian matrix를 곱하는 것도 이미 "행렬로 확장"된 것이지만 너무 커서 비실용적이므로, 보다 compact한 것을 구하는 작업임.  
+  
+![4_3.png](assets/4_3.png)
+
+## Neural Networks
+
+* Fully-connected 레이어를 층층이 쌓아나간 것  
+  ![4_4.png](assets/4_4.png)
+* SVM과 softmax의 차이가 같은 score를 두고 loss를 다르게 계산하는 거였다면, 이젠 score의 계산이 바뀐다.
+  * Linear : ![f=Wx+b](https://latex.codecogs.com/png.latex?f%3DWx%2Bb)
+  * 2-layer Neural Network : ![f=W_2 max(0, W_1 x + b_1) + b_2](https://latex.codecogs.com/png.latex?f%3DW_2%20max%280%2C%20W_1%20x%20%2B%20b_1%29%20%2B%20b_2)
+  * 3-layer Neural Network : ...
+  * 중간에 있는 레이어를 hidden layer라고 부른다.
+* 여기서 max의 역할은 non-linear unit. 저게 없으면 다 collapse되어서 결국 linear랑 다를 게 없어진다.
+  * non-linear unit은 여러가지 있지만 대개 activation의 기능을 수행하는 함수를 사용한다
+    * input이 충분히 클 때에만 output을 보내는 작용  
+  ![4_5.png](assets/4_5.png)
+* 레이어의 존재 의의
+  * 이론적: non-linear unit의 조합을 통해 충분히 복잡한 함수를 모사할 수 있다.
+  * 직관적: linear classifier가 각 class에 대한 averaged template 하나만을 가질 수 있었다면, 이제 필요한 여러 가지 sub-pattern을 추출해서 hidden layer에 저장해가며 더 다각적인 요소를 고려할 수 있다
+  * 실용적: back propagation이 matrix multiplication으로 단순화되어 vectorized code 작성 가능
+* 뉴럴 네트워크와 실제 뇌와의 비교
+  * perceptron과 neuron은 input들이 있고, output이 있고, activation이 있다는 점에서 비슷하다
+  * 하지만 실제 뇌에서는 뉴런 종류가 다양하고, dendrite도 계산을 하는 경우가 있고, synapse(엣지)도 non-linear dynamic system인 등등 다른 점도 많으니 비유를 너무 비약적으로 하지 않도록 주의
+  
+
