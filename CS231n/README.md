@@ -69,3 +69,46 @@
 
 * 다른 관점에서는, ![w_i^Tx+b_i](https://latex.codecogs.com/png.latex?w_i^Tx+b_i)를 hyperplane으로 생각하면, 각각의 hyperplane들과 ![z=0](https://latex.codecogs.com/png.latex?z=0)의 교선들이 대강 그 클래스에 속하는 것과 그 클래스가 아닌 것을 양분한다고 볼 수 있음
   * 그렇기 때문에 parity check (1, 3사분면은 class 1이고 2, 4사분면은 class 2)나, 원형이거나, 같은 class가 전혀 다른 곳에서 두 개 이상의 cluster를 이루거나 할 때 liner classifier는 곤란해짐
+
+# Lecture 3: Loss functions and Optimization
+
+## Loss function
+
+* Parametric approach에서 ![f(x,W)](https://latex.codecogs.com/png.latex?f%28x%2CW%29)는 score라고 부르고, 현재 score가 얼마나 좋은지를 loss function으로 판단한다.
+* Loss는 크게 두 가지로 나눠볼 수 있다.
+  * Data loss: 현재 모델의 예측이 실제 정답과 떨어진 정도. ![\\frac{1}{N}\sum_{i=1}^{N}L_i(f(x_i,W),y_i)](https://latex.codecogs.com/png.latex?%5Cfrac%7B1%7D%7BN%7D%5Csum_%7Bi%3D1%7D%5E%7BN%7DL_i%28f%28x_i%2CW%29%2Cy_i%29)
+  * Regularization loss: 현재 모델의 복잡성. ![\lambda R(W)](https://latex.codecogs.com/png.latex?%5Clambda%20R%28W%29)
+    * ![\lambda](https://latex.codecogs.com/png.latex?%5Clambda) : regularization strength (hyperparameter)
+    * ![R(W)](https://latex.codecogs.com/png.latex?R%28W%29)는 보통 L2나 L1 사용.
+  * Regularization loss는 대부분 비슷하게 L2인 ![\lambda \sum W_{i,j}^2](https://latex.codecogs.com/png.latex?%5Clambda%20%5Csum%20W_%7Bi%2Cj%7D%5E2)을 쓰고, Data loss의 종류가 모델의 정체성을 결정한다.
+* SVM loss
+  * SVM(Supporting Vector Machine)은 정답의 score가 오답의 score들보다 특정한 margin 값(대부분 1) 이상 차이나기를 지향한다.
+  * ![L_i(f(x_i,W),y_i)=\sum_{j \neq y_i} max(0, s_j-s_{y_i}+1)](https://latex.codecogs.com/png.latex?L_i%28f%28x_i%2CW%29%2Cy_i%29%3D%5Csum_%7Bj%20%5Cneq%20y_i%7D%20max%280%2C%20s_j-s_%7By_i%7D%2B1%29)
+  * 그래프가 이렇게 생겨서 hinge loss라고 부름.  
+  ![3_1.png](assets/3_1.png)
+* Softmax loss
+  * SVM은 margin 이상 차이나면 신경쓰지 않는 것에 반해, softmax는 차이가 더 벌어지는 것을 선호한다.
+  * Score를 확률로 해석하기 위해 exp를 씌운 후 normalization하고, distance를 계산할 때는 -log를 씌운다
+    * ![L_i = -log(\frac{exp(s_{y_i})}{\sum_j{exp(s_j)}})](https://latex.codecogs.com/png.latex?L_i%20%3D%20-log%28%5Cfrac%7Bexp%28s_%7By_i%7D%29%7D%7B%5Csum_j%7Bexp%28s_j%29%7D%7D%29)
+    * log를 씌우는 이유는 information theory와 관련이 있는듯
+
+## Optimization
+
+* Loss가 작은 parameter를 찾는 과정을 optimization이라고 부른다.
+* Random search는 말도 안 되니까, gradient를 구해서 그 반대 방향으로 이동하는 접근을 취하는데 이를 gradient descent라고 한다.
+  * ![f:R^n \mapsto R](https://latex.codecogs.com/png.latex?f%3AR%5En%20%5Cmapsto%20R)의 gradient는 최대 증가 방향
+  * ![\Delta W = \lambda \nabla_{W}L](https://latex.codecogs.com/png.latex?%5CDelta%20W%20%3D%20%5Clambda%20%5Cnabla_%7BW%7DL)이고 여기서 ![\lambda](https://latex.codecogs.com/png.latex?%5Clambda)는 learning rate로 상당히 중요한 hyperparameter
+* Numerical하게도 구할 수 있지만 모든 ![W](https://latex.codecogs.com/png.latex?W)의 성분에 대해 하는 것이 오래 걸리기 때문에, 해석적으로 gradient를 구한다.
+* 그리고 Loss를 계산하려면 모든 input data에 대해 계산해야 하는데 이러면 오래 걸리니까, 랜덤하게 mini batch를 샘플해서 gradient descent를 하고, 이를 SGD(Stochastic Gradient Descent)라고 부른다.
+
+## Image features
+
+* raw pixel 말고 이미지의 high-level feature를 계산해서 학습시키면 더 잘 되기도 한다.
+* Color histogram: hue에 따라 aggregate하고 binning해서 히스토그램으로 나타낸 것  
+  ![3_2.png](assets/3_2.png)
+* Histogram of Oriented Gradients(HoG): 이미지를 patch로 쪼개고, 각 patch에 대해 몇 가지 방향의 gradient 세기를 구해 놓은 정보
+  * 기울기 정보랑 위치 정보가 연합되어 저장된 형태  
+  ![3_3.png](assets/3_3.png)
+* Bag of Words: 이미지에서 patch를 적당하게 랜덤 추출해서 codebook처럼 사용하는 것. 이 경우 feature는 차원이 word의 갯수인 히스토그램.
+* 과거에는 feature extraction이 유행했는데, 요즘은 CNN이 feature extraction 작업을 암묵적으로 해주고 있다.  
+  ![3_4.png](assets/3_4.png)
