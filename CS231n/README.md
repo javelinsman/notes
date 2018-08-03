@@ -38,7 +38,7 @@
 * 제일 가까운 이웃 하나만 고려하면 generalizable한 decision boundary가 형성되지 않음
   * outlier가 자신만의 local area를 구축하기 때문
 * 그래서 K개의 가까운 이웃을 보고, 그 중에 가장 많이 속한 category로 예측함 (KNN)  
- ![](./assets/2_1.PNG)
+ ![](assets/2_1.png)
  
 * Image classification에선 사실 안 씀
   * 이유 1: 지각적으로 다르게 느껴지는 것과, L1이나 L2 거리가 상관이 없음
@@ -54,7 +54,7 @@
 * 결론: train & valid & test set의 세 종류로 나눠서, train에서 훈련하고, valid에 제일 좋은거 선택하고, test에는 딱 한 번 돌려보고 운명을 받아들이기
 * Cross-validation은 training set에서 valid set을 하나로 특정하지 않고, valid set을 달리 해가며 여러번 돌리고 평균값을 취하는 접근법.
   * dataset 작으면 쓸만 한데, 딥러닝에선 잘 안 쓴다  
-  ![](assets/2_2.PNG)
+  ![](assets/2_2.png)
 * 여러 hyperparameter에 대해 돌려보고 plotting 해보면 뭘 골라야 하는지 감이 옴.
 
 ## Linear Classification
@@ -65,7 +65,7 @@
 * 직관적으로 해석하면, i번째 클래스에 속할 점수를 ![s_i](https://latex.codecogs.com/png.latex?s_i)라고 할 때 ![w_i^Tx+b_i=s_i](https://latex.codecogs.com/png.latex?w_i^Tx+b_i=s_i)가 되기 때문에 ![w_i^T](https://latex.codecogs.com/png.latex?w_i^T)가 template같은 느낌이 됨.
   * ![b_i](https://latex.codecogs.com/png.latex?b_i)는 bias로서 특정 카테고리에 속할 확률이 높은 경우 (예. 데이터셋이 고양이만 99만마리) 보정해주기 위함
   * 클래스당 template이 하나 밖에 없기 때문에 average가 취해질 수밖에 없고, 그래서 설명력이 제한적임.  
-  ![](assets/2_3.PNG)
+  ![](assets/2_3.png)
 
 * 다른 관점에서는, ![w_i^Tx+b_i](https://latex.codecogs.com/png.latex?w_i^Tx+b_i)를 hyperplane으로 생각하면, 각각의 hyperplane들과 ![z=0](https://latex.codecogs.com/png.latex?z=0)의 교선들이 대강 그 클래스에 속하는 것과 그 클래스가 아닌 것을 양분한다고 볼 수 있음
   * 그렇기 때문에 parity check (1, 3사분면은 class 1이고 2, 4사분면은 class 2)나, 원형이거나, 같은 class가 전혀 다른 곳에서 두 개 이상의 cluster를 이루거나 할 때 liner classifier는 곤란해짐
