@@ -78,9 +78,9 @@
   * Loss는 판단 기준이 될 뿐, 예측할 땐 score 제일 높은 걸 선택하는 것이니 헷갈리지 않게 주의. 예측할 때 softmax를 계산하고 그럴 필요 없다.
 * Loss는 크게 두 가지로 나눠볼 수 있다.
   * Data loss: 현재 모델의 예측이 실제 정답과 떨어진 정도.  
-    ![\\frac{1}{N}\sum_{i=1}^{N}L_i(f(x_i,W),y_i)](https://latex.codecogs.com/png.latex?%5Cfrac%7B1%7D%7BN%7D%5Csum_%7Bi%3D1%7D%5E%7BN%7DL_i%28f%28x_i%2CW%29%2Cy_i%29)
+    * ![\\frac{1}{N}\sum_{i=1}^{N}L_i(f(x_i,W),y_i)](https://latex.codecogs.com/png.latex?%5Cfrac%7B1%7D%7BN%7D%5Csum_%7Bi%3D1%7D%5E%7BN%7DL_i%28f%28x_i%2CW%29%2Cy_i%29)
   * Regularization loss: 현재 모델의 복잡성.  
-    ![\lambda R(W)](https://latex.codecogs.com/png.latex?%5Clambda%20R%28W%29)
+    * ![\lambda R(W)](https://latex.codecogs.com/png.latex?%5Clambda%20R%28W%29)
     * ![\lambda](https://latex.codecogs.com/png.latex?%5Clambda) : regularization strength (hyperparameter)
     * ![R(W)](https://latex.codecogs.com/png.latex?R%28W%29)는 보통 L2나 L1 사용.
   * Regularization loss는 대부분 비슷하게 L2인 ![\lambda \sum W_{i,j}^2](https://latex.codecogs.com/png.latex?%5Clambda%20%5Csum%20W_%7Bi%2Cj%7D%5E2)을 쓰고, Data loss의 종류가 모델의 정체성을 결정한다.
